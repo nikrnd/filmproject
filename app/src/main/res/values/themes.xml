@@ -29,7 +29,7 @@
     <style name="Theme.Film.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:statusBarColor">@android:color/holo_blue_dark</item>
+        <item name="android:statusBarColor">@color/redd</item>
     </style>
 
     <style name="Theme.Film.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

@@ -5,7 +5,7 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#D8D7D7"
+    android:background="@drawable/activity_borcorners"
     android:theme="@style/ThemeOverlay.Film.FullscreenContainer"
     tools:context=".FullscreenActivity">
 
@@ -23,7 +23,7 @@
             android:layout_width="220dp"
             android:layout_height="100dp"
             android:layout_marginBottom="128dp"
-            android:background="@drawable/login_button"
+            android:backgroundTint="@color/redd"
             android:text="Admin"
             android:textColor="@color/white"
             app:layout_constraintBottom_toTopOf="@+id/button3"
@@ -35,7 +35,7 @@
             android:id="@+id/button3"
             android:layout_width="220dp"
             android:layout_height="100dp"
-            android:background="@drawable/login_button"
+            android:backgroundTint="@color/redd"
             android:text="Guest"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
