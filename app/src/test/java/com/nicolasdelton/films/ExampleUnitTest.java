@@ -1,4 +1,4 @@
-package com.nicolasdelton.film;
+package com.nicolasdelton.films;
 
 import org.junit.Test;
 

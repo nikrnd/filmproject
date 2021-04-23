@@ -1,4 +1,4 @@
-package com.nicolasdelton.film;
+package com.nicolasdelton.films;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.nicolasdelton.film", appContext.getPackageName());
+        assertEquals("com.nicolasdelton.films", appContext.getPackageName());
     }
 }
