@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.nicolasdelton.films.ui.home.NoleggioFragment"
+        android:name="com.nicolasdelton.films.ui.NoleggioFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_noleggio" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.nicolasdelton.films.ui.dashboard.FilmFragment"
+        android:name="com.nicolasdelton.films.ui.FilmFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_Film" />
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.nicolasdelton.films.ui.notifications.ResocontoFragment"
+        android:name="com.nicolasdelton.films.ui.ResocontoFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_resoconto" />
 </navigation>
