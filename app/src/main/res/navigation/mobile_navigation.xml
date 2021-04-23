@@ -3,23 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_noleggio">
 
     <fragment
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_noleggio"
         android:name="com.nicolasdelton.films.ui.NoleggioFragment"
-        android:label="@string/title_home"
+        android:label="@string/title_noleggio"
         tools:layout="@layout/fragment_noleggio" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_film"
         android:name="com.nicolasdelton.films.ui.FilmFragment"
-        android:label="@string/title_dashboard"
+        android:label="@string/title_film"
         tools:layout="@layout/fragment_Film" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_resoconto"
         android:name="com.nicolasdelton.films.ui.ResocontoFragment"
-        android:label="@string/title_notifications"
+        android:label="@string/title_resoconto"
         tools:layout="@layout/fragment_resoconto" />
 </navigation>
