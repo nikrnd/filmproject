@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "832233003587",
+    "project_id": "film-5a53b",
+    "storage_bucket": "film-5a53b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:832233003587:android:b02632411a9777355112f6",
+        "android_client_info": {
+          "package_name": "com.nicolasdelton.films"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "832233003587-eauh4k3v415bhck1ktrr6u0134kr1g7o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nicolasdelton.films",
+            "certificate_hash": "0ed80bddd36c081392216ffb5bad95f410c99318"
+          }
+        },
+        {
+          "client_id": "832233003587-2vqdovavdsami609cinvlv8ns4sk1sdc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2Knawz_cQNwe_acMQ-ZN9y6oaFTHKfG8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "832233003587-2vqdovavdsami609cinvlv8ns4sk1sdc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
