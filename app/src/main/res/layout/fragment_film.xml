@@ -17,8 +17,83 @@
         android:background="@drawable/background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
+        <EditText
+            android:id="@+id/codice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/edittextback"
+            android:ems="10"
+            android:hint="Codice"
+            android:inputType="numberSigned"
+            android:paddingLeft="@dimen/cursorpadding"
+            android:paddingTop="@dimen/cursorpadding"
+            android:paddingRight="@dimen/cursorpadding"
+            android:paddingBottom="@dimen/cursorpadding"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/titolo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:paddingTop="@dimen/cursorpadding"
+            android:paddingBottom="@dimen/cursorpadding"
+            android:paddingLeft="@dimen/cursorpadding"
+            android:paddingRight="@dimen/cursorpadding"
+            android:ems="10"
+            android:background="@drawable/edittextback"
+            android:hint="Titolo"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/codice" />
+
+        <EditText
+            android:id="@+id/trama"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="16dp"
+            android:ems="10"
+            android:paddingTop="@dimen/cursorpadding"
+            android:paddingBottom="@dimen/cursorpadding"
+            android:paddingLeft="@dimen/cursorpadding"
+            android:paddingRight="@dimen/cursorpadding"
+            android:background="@drawable/edittextback"
+            android:gravity="start|top"
+            android:hint="Trama"
+            android:inputType="textMultiLine"
+            app:layout_constraintBottom_toTopOf="@+id/send"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titolo" />
+
+        <Button
+            android:id="@+id/send"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="24dp"
+            android:background="@color/backgreen"
+            android:text="Aggiungi"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
