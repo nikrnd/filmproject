@@ -37,13 +37,13 @@ public class NoleggioFragment extends Fragment {
 
         films = new ArrayList<>();
 
-        syncDB();
+        //syncDB();
 
         for (int i = 0; i < films.size(); i++) {
-            System.out.println("############");
-            System.out.println(films.get(i).getCodice());
-            System.out.println(films.get(i).getTitolo());
-            System.out.println(films.get(i).getTrama());
+//            System.out.println("############");
+//            System.out.println(films.get(i).getCodice());
+//            System.out.println(films.get(i).getTitolo());
+//            System.out.println(films.get(i).getTrama());
         }
 
 //        chooseSpinner = root.findViewById(R.id.chooseFilm);

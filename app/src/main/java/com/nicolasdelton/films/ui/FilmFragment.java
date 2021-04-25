@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,6 +49,8 @@ public class FilmFragment extends Fragment {
         titolo = root.findViewById(R.id.titolo);
         trama = root.findViewById(R.id.trama);
 
+        //removeFilm(2);
+
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,16 +59,13 @@ public class FilmFragment extends Fragment {
 //                System.out.println("##########" + trama.getText() + "##");
 
                 if (codice.getText().toString().equals("") ||
-                titolo.getText().toString().equals("") ||
-                trama.getText().toString().equals("")) {
-                    System.out.println("###");
+                        titolo.getText().toString().equals("") ||
+                        trama.getText().toString().equals("")) {
+                    //System.out.println("###");
                     Toast.makeText(requireContext(), "Inserisci tutti i campi", Toast.LENGTH_SHORT).show();
                 } else {
                     inserisciFilm();
                     Toast.makeText(requireContext(), "Film inserito", Toast.LENGTH_SHORT).show();
-                    codice.setText("");
-                    titolo.setText("");
-                    trama.setText("");
                 }
             }
         });
@@ -73,43 +74,62 @@ public class FilmFragment extends Fragment {
     }
 
     private void inserisciFilm(){
-        films.add(new Film(Integer.parseInt(codice.getText().toString()), titolo.getText().toString(), trama.getText().toString()));
+        //films.add(new Film(Integer.parseInt(codice.getText().toString()), titolo.getText().toString(), trama.getText().toString()));
         databaseAdd();
     }
 
-    String value;
+    private void removeFilm(int n){
+        //films.remove(n);
+        databaseRemove(n);
+    }
 
     private void databaseAdd(){
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference ref = database.child("Film");
+
+        ref.child("value").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    task.getException();
+                }
+                else {
+                    int value = Integer.parseInt(task.getResult().getValue().toString());
+
+                    DatabaseReference ccDB = ref.child("value");
+                    ccDB.setValue(value + 1);
+
+                    DatabaseReference codiceDB = ref.child(String.valueOf(value + 1)).child("codice");
+                    codiceDB.setValue(codice.getText().toString());
+
+                    DatabaseReference titoloDB = ref.child(String.valueOf(value + 1)).child("titolo");
+                    titoloDB.setValue(titolo.getText().toString());
+
+                    DatabaseReference tramaDB = ref.child(String.valueOf(value + 1)).child("trama");
+                    tramaDB.setValue(trama.getText().toString());
+                }
+            }
+        });
+
+
+        codice.setText("");
+        titolo.setText("");
+        trama.setText("");
+//
+
+
+        // Film film = new Film(Integer.parseInt(codice.getText().toString()), titolo.getText().toString(), trama.getText().toString());
+    }
+
+    private void databaseRemove(int n){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("/Film");
-        // Read from the database
-        FirebaseDatabase.getInstance()
-                .getReference("Leaders")
-                .getV().ContinueWith(task => {
-        if (task.IsFaulted) {
-            // Handle the error...
-        }
-        else if (task.IsCompleted) {
-            DataSnapshot snapshot = task.Result;
-            // Do something with snapshot...
-        }
-      });
 
-        System.out.println("##########" + value);
+        DatabaseReference ccDB = database.getReference("Film/" + n);
+        ccDB.setValue(null);
 
-//        DatabaseReference ccDB = database.getReference("Film/value");
-//        ccDB.setValue(value);
-//
-//        DatabaseReference codiceDB = database.getReference("Film/" + value + "/codice");
-//        codiceDB.setValue(codice.getText().toString());
-//
-//        DatabaseReference titoloDB = database.getReference("Film/" + value + "/titolo");
-//        titoloDB.setValue(titolo.getText().toString());
-//
-//        DatabaseReference tramaDB = database.getReference("Film/" + value + "/trama");
-//        tramaDB.setValue(trama.getText().toString());
-
-
-       // Film film = new Film(Integer.parseInt(codice.getText().toString()), titolo.getText().toString(), trama.getText().toString());
+        /**
+         * settare il value a value - 1;
+         * e riordinare il database
+         */
     }
 }
