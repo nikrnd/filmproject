@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,11 +26,14 @@ import com.nicolasdelton.films.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class ResocontoFragment extends Fragment {
 
     ListView films;
     ArrayList<String> listFilm;
+    ArrayAdapter<String> itemsAdapter;
+    ConstraintLayout loading;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -36,7 +41,11 @@ public class ResocontoFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_resoconto, container, false);
 
         films = root.findViewById(R.id.filmList);
-        listFilm = new ArrayList<>();
+        loading = root.findViewById(R.id.loading);
+
+        listFilm = new ArrayList<String>();
+
+        itemsAdapter = new ArrayAdapter<String>( requireActivity(), android.R.layout.simple_list_item_1, listFilm);
 
         syncFilms();
 
@@ -63,16 +72,20 @@ public class ResocontoFragment extends Fragment {
                         number.child("titolo").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                String filmTitle = task.getResult().getValue().toString();
+                                Object object = task.getResult().getValue();
+                                if (object != null) {
+                                    String filmTitle = String.valueOf(object);
+                                    listFilm.add(filmTitle);
+                                    itemsAdapter.notifyDataSetChanged();
+                                    //System.out.println("####" + listFilm);
 
-                                listFilm.add(filmTitle);
-                                System.out.println("####" + listFilm);
-                                ArrayAdapter<String> itemsAdapter =
-                                        new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, listFilm);
-                                films.setAdapter(itemsAdapter);
+                                    films.setAdapter(itemsAdapter);
+                                }
                             }
                         });
                     }
+
+                    loading.setVisibility(View.GONE);
                 }
             }
         });

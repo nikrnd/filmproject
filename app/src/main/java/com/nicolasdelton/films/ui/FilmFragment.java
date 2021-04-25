@@ -107,14 +107,13 @@ public class FilmFragment extends Fragment {
 
                     DatabaseReference tramaDB = ref.child(String.valueOf(value + 1)).child("trama");
                     tramaDB.setValue(trama.getText().toString());
+
+                    codice.setText("");
+                    titolo.setText("");
+                    trama.setText("");
                 }
             }
         });
-
-
-        codice.setText("");
-        titolo.setText("");
-        trama.setText("");
 //
 
 

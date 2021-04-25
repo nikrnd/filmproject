@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupWithNavController(navView, navController);
 
+
+
         /**
          * Per mettere lo sfondo a schermo intero
          */
@@ -43,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Thread in ascolto su pressione pulsanti
+     */
     private void twoClickListeners () {
         View noleggioView = findViewById(R.id.navigation_noleggio);
         ConstraintLayout layout = findViewById(R.id.login);
