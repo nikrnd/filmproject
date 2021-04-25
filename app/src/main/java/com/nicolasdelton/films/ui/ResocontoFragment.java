@@ -172,6 +172,7 @@ public class ResocontoFragment extends Fragment {
                     for (int i = 0; i <= value; i++){
                         DatabaseReference number = ref.child(String.valueOf(i));
 
+                        int finalI = i;
                         number.child("titolo").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -184,11 +185,11 @@ public class ResocontoFragment extends Fragment {
 
                                     films.setAdapter(adapterFilm);
                                 }
+
+                                if (finalI == value) loading.setVisibility(View.GONE);
                             }
                         });
                     }
-
-                    loading.setVisibility(View.GONE);
                 }
             }
         });
