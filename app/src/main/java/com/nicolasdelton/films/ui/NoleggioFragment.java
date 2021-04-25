@@ -55,8 +55,8 @@ public class NoleggioFragment extends Fragment {
         return root;
     }
 
-    private Integer value = 1, codice;
-    private String titolo, trama;
+    private Integer value = 1;
+    private String codice, titolo, trama;
 
     private void syncDB() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -76,15 +76,16 @@ public class NoleggioFragment extends Fragment {
             }
         });
 
-        for (int i = 1; i <= value; i++) {
-            DatabaseReference refCodice = database.getReference("Film/" + i + "/codice");
+        System.out.println("####" + value);
+
+        DatabaseReference refCodice = database.getReference("Film/1/codice");
             // Read from the database
             refCodice.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     // This method is called once with the initial value and again
                     // whenever data at this location is updated.
-                     codice = dataSnapshot.getValue(Integer.class);
+                     codice = dataSnapshot.getValue(String.class);
                 }
 
                 @Override
@@ -93,7 +94,7 @@ public class NoleggioFragment extends Fragment {
                 }
             });
 
-            DatabaseReference refTitolo = database.getReference("Film/" + i + "/titolo");
+        DatabaseReference refTitolo = database.getReference("Film/1/titolo");
             // Read from the database
             refTitolo.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -109,7 +110,7 @@ public class NoleggioFragment extends Fragment {
                 }
             });
 
-            DatabaseReference refTrama = database.getReference("Film/" + i + "/trama");
+            DatabaseReference refTrama = database.getReference("Film/1/trama");
             // Read from the database
             refTrama.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -125,10 +126,61 @@ public class NoleggioFragment extends Fragment {
                 }
             });
 
-            //films.add(new Film(Integer.parseInt(codice), titolo, trama));
+        System.out.println("####" + codice + "; " + titolo + "; " + trama);
 
-            System.out.println("####" + codice + "; " + titolo + "; " + trama);
-        }
+//        for (int i = 1; i <= value; i++) {
+//            DatabaseReference refCodice = database.getReference("Film/" + i + "/codice");
+//            // Read from the database
+//            refCodice.addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(DataSnapshot dataSnapshot) {
+//                    // This method is called once with the initial value and again
+//                    // whenever data at this location is updated.
+//                     codice = dataSnapshot.getValue(Integer.class);
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError error) {
+//                    // Failed to read value
+//                }
+//            });
+//
+//            DatabaseReference refTitolo = database.getReference("Film/" + i + "/titolo");
+//            // Read from the database
+//            refTitolo.addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(DataSnapshot dataSnapshot) {
+//                    // This method is called once with the initial value and again
+//                    // whenever data at this location is updated.
+//                    titolo = dataSnapshot.getValue(String.class);
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError error) {
+//                    // Failed to read value
+//                }
+//            });
+//
+//            DatabaseReference refTrama = database.getReference("Film/" + i + "/trama");
+//            // Read from the database
+//            refTrama.addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(DataSnapshot dataSnapshot) {
+//                    // This method is called once with the initial value and again
+//                    // whenever data at this location is updated.
+//                    trama = dataSnapshot.getValue(String.class);
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError error) {
+//                    // Failed to read value
+//                }
+//            });
+//
+//            //films.add(new Film(Integer.parseInt(codice), titolo, trama));
+//
+//            System.out.println("####" + codice + "; " + titolo + "; " + trama);
+//        }
     }
 
 

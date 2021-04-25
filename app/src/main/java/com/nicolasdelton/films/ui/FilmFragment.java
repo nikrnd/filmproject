@@ -24,12 +24,15 @@ import com.nicolasdelton.films.R;
 import com.nicolasdelton.films.film.Film;
 import com.nicolasdelton.films.film.Noleggio;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class FilmFragment extends Fragment {
 
-    private ArrayList<Film> films = new ArrayList<>();
-    private ArrayList<Noleggio> noleggi = new ArrayList<>();
+    private List<Film> films = new ArrayList<>();
+    private List<Noleggio> noleggi = new ArrayList<>();
 
     private Button send;
     private TextView codice, titolo, trama;
@@ -74,37 +77,37 @@ public class FilmFragment extends Fragment {
         databaseAdd();
     }
 
-    Integer value = 1;
+    String value;
 
     private void databaseAdd(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("Film/value");
+        DatabaseReference myRef = database.getReference("/Film");
         // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                value = ((dataSnapshot.getValue(Integer.class)) + 1);
-            }
+        FirebaseDatabase.getInstance()
+                .getReference("Leaders")
+                .getV().ContinueWith(task => {
+        if (task.IsFaulted) {
+            // Handle the error...
+        }
+        else if (task.IsCompleted) {
+            DataSnapshot snapshot = task.Result;
+            // Do something with snapshot...
+        }
+      });
 
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-            }
-        });
+        System.out.println("##########" + value);
 
-        DatabaseReference ccDB = database.getReference("Film/value");
-        ccDB.setValue(value);
-
-        DatabaseReference codiceDB = database.getReference("Film/" + value + "/codice");
-        codiceDB.setValue(codice.getText().toString());
-
-        DatabaseReference titoloDB = database.getReference("Film/" + value + "/titolo");
-        titoloDB.setValue(titolo.getText().toString());
-
-        DatabaseReference tramaDB = database.getReference("Film/" + value + "/trama");
-        tramaDB.setValue(trama.getText().toString());
+//        DatabaseReference ccDB = database.getReference("Film/value");
+//        ccDB.setValue(value);
+//
+//        DatabaseReference codiceDB = database.getReference("Film/" + value + "/codice");
+//        codiceDB.setValue(codice.getText().toString());
+//
+//        DatabaseReference titoloDB = database.getReference("Film/" + value + "/titolo");
+//        titoloDB.setValue(titolo.getText().toString());
+//
+//        DatabaseReference tramaDB = database.getReference("Film/" + value + "/trama");
+//        tramaDB.setValue(trama.getText().toString());
 
 
        // Film film = new Film(Integer.parseInt(codice.getText().toString()), titolo.getText().toString(), trama.getText().toString());
