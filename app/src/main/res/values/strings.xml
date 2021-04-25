@@ -3,4 +3,6 @@
     <string name="title_noleggio">Noleggio</string>
     <string name="title_film">Film</string>
     <string name="title_resoconto">Resoconto</string>
+    <string name="logout">Logout</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

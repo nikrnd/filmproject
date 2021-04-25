@@ -33,9 +33,6 @@ import java.util.List;
 
 public class FilmFragment extends Fragment {
 
-    private List<Film> films = new ArrayList<>();
-    private List<Noleggio> noleggi = new ArrayList<>();
-
     private Button send;
     private TextView codice, titolo, trama;
 

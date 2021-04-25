@@ -15,11 +15,12 @@
         android:id="@+id/navigation_film"
         android:name="com.nicolasdelton.films.ui.FilmFragment"
         android:label="@string/title_film"
-        tools:layout="@layout/fragment_Film" />
+        tools:layout="@layout/fragment_film" />
 
     <fragment
         android:id="@+id/navigation_resoconto"
         android:name="com.nicolasdelton.films.ui.ResocontoFragment"
         android:label="@string/title_resoconto"
         tools:layout="@layout/fragment_resoconto" />
+
 </navigation>

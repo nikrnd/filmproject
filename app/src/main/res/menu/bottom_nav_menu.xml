@@ -4,7 +4,8 @@
     <item
         android:id="@+id/navigation_noleggio"
         android:icon="@drawable/noleggio"
-        android:title="@string/title_noleggio" />
+        android:title="@string/title_noleggio"
+        android:checkable="true" />
 
     <item
         android:id="@+id/navigation_film"
@@ -15,5 +16,10 @@
         android:id="@+id/navigation_resoconto"
         android:icon="@drawable/resoconto"
         android:title="@string/title_resoconto" />
+
+    <item
+        android:id="@+id/navigation_logout"
+        android:icon="@drawable/logout"
+        android:title="@string/logout" />
 
 </menu>
