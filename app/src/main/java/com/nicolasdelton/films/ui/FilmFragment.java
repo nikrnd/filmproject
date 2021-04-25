@@ -75,11 +75,6 @@ public class FilmFragment extends Fragment {
         databaseAdd();
     }
 
-    private void removeFilm(int n){
-        //films.remove(n);
-        databaseRemove(n);
-    }
-
     private void databaseAdd(){
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         DatabaseReference ref = database.child("Film");
@@ -115,17 +110,5 @@ public class FilmFragment extends Fragment {
 
 
         // Film film = new Film(Integer.parseInt(codice.getText().toString()), titolo.getText().toString(), trama.getText().toString());
-    }
-
-    private void databaseRemove(int n){
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-
-        DatabaseReference ccDB = database.getReference("Film/" + n);
-        ccDB.setValue(null);
-
-        /**
-         * settare il value a value - 1;
-         * e riordinare il database
-         */
     }
 }

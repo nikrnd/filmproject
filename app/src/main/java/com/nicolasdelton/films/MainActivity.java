@@ -25,8 +25,8 @@ import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity {
 
-    BottomNavigationView navView;
-    ConstraintLayout layout;
+    private BottomNavigationView navView;
+    private ConstraintLayout layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
         admin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                navView.setSelectedItemId(R.id.navigation_film);
+
                 noleggioView.setActivated(true);
 
                 navView.getMenu()
@@ -101,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
         guest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                navView.setSelectedItemId(R.id.navigation_film);
+
                 noleggioView.setActivated(false);
 
                 navView.getMenu()
