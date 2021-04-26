@@ -30,9 +30,7 @@ public class ResocontoFragment extends Fragment {
     private ArrayList<String> listFilm, listNoleggi;
     private ArrayAdapter<String> adapterFilm, adapterNoleggi;
     private ConstraintLayout loading;
-
     private ArrayList<Film> filmClassList;
-    private boolean filmUpdateController = false;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -59,17 +57,13 @@ public class ResocontoFragment extends Fragment {
         films.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                while (!filmUpdateController) {
-
-                }
-
                 new AlertDialog.Builder(requireContext())
-                        .setTitle(filmClassList.get(position).getTitolo())
-                        .setMessage(filmClassList.get(position).getTrama())
+                        .setTitle("Elimina")
+                        .setMessage("Sicuro di voler eliminare il film: " + listFilm.get(position))
 
                         // Specifying a listener allows you to take an action before dismissing the dialog.
                         // The dialog is automatically dismissed when a dialog button is clicked.
-                        .setPositiveButton("Elimina", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // Continue with delete operation
                                 databaseFilmRemove(position);
@@ -77,30 +71,9 @@ public class ResocontoFragment extends Fragment {
                         })
 
                         // A null listener allows the button to dismiss the dialog and take no further action.
-                        .setNegativeButton("Chiudi", null)
+                        .setNegativeButton(android.R.string.no, null)
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .show();
-
-
-
-
-//                new AlertDialog.Builder(requireContext())
-//                        .setTitle("Elimina")
-//                        .setMessage("Sicuro di voler eliminare il film?")
-//
-//                        // Specifying a listener allows you to take an action before dismissing the dialog.
-//                        // The dialog is automatically dismissed when a dialog button is clicked.
-//                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                // Continue with delete operation
-//                                databaseFilmRemove(position);
-//                            }
-//                        })
-//
-//                        // A null listener allows the button to dismiss the dialog and take no further action.
-//                        .setNegativeButton(android.R.string.no, null)
-//                        .setIcon(android.R.drawable.ic_dialog_alert)
-//                        .show();
             }
         });
 
@@ -150,13 +123,14 @@ public class ResocontoFragment extends Fragment {
 
                     DatabaseReference removeFilm = ref.child(String.valueOf(position + 1));
                     removeFilm.setValue(null);
+
+                    listFilm.remove(position);
+                    adapterFilm.notifyDataSetChanged();
                 }
             }
         });
 
         //System.out.println("####"+listFilm);
-        listFilm.remove(position);
-        adapterFilm.notifyDataSetChanged();
     }
 
     private void databaseNoleggiRemove(int position){
@@ -241,15 +215,11 @@ public class ResocontoFragment extends Fragment {
                                     film.setTrama(filmTrama);
                                 }
 
-                                if (finalI == value) {
-                                    loading.setVisibility(View.GONE);
-                                    filmUpdateController = true;
-                                }
+                                if (finalI == value) loading.setVisibility(View.GONE);
                             }
                         });
 
                         filmClassList.add(film);
-                        films.se
                     }
                 }
             }
