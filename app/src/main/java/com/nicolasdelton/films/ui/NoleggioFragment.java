@@ -48,10 +48,14 @@ public class NoleggioFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_noleggio, container, false);
 
+
+
         listFilm = new ArrayList<String>();
         loading = root.findViewById(R.id.loadingNol);
         adapterFilm = new ArrayAdapter<String>( requireActivity(), android.R.layout.simple_list_item_1, listFilm);
         filmClassList = new ArrayList<>();
+
+        loading.setVisibility(View.VISIBLE);
 
         chooseSpinner = root.findViewById(R.id.chooseFilm);
         idcliente = root.findViewById(R.id.idcliente);

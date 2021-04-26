@@ -31,6 +31,9 @@ public class ResocontoFragment extends Fragment {
     private ArrayAdapter<String> adapterFilm, adapterNoleggi;
     private ConstraintLayout loading;
 
+    private ArrayList<Film> filmClassList;
+    private boolean filmUpdateController = false;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -39,6 +42,10 @@ public class ResocontoFragment extends Fragment {
         films = root.findViewById(R.id.filmList);
         noleggi = root.findViewById(R.id.noleggList);
         loading = root.findViewById(R.id.loading);
+
+        loading.setVisibility(View.VISIBLE);
+
+        filmClassList = new ArrayList<>();
 
         listFilm = new ArrayList<>();
         listNoleggi = new ArrayList<>();
@@ -52,13 +59,17 @@ public class ResocontoFragment extends Fragment {
         films.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                while (!filmUpdateController) {
+
+                }
+
                 new AlertDialog.Builder(requireContext())
-                        .setTitle("Elimina")
-                        .setMessage("Sicuro di voler eliminare il film?")
+                        .setTitle(filmClassList.get(position).getTitolo())
+                        .setMessage(filmClassList.get(position).getTrama())
 
                         // Specifying a listener allows you to take an action before dismissing the dialog.
                         // The dialog is automatically dismissed when a dialog button is clicked.
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        .setPositiveButton("Elimina", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // Continue with delete operation
                                 databaseFilmRemove(position);
@@ -66,9 +77,30 @@ public class ResocontoFragment extends Fragment {
                         })
 
                         // A null listener allows the button to dismiss the dialog and take no further action.
-                        .setNegativeButton(android.R.string.no, null)
+                        .setNegativeButton("Chiudi", null)
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .show();
+
+
+
+
+//                new AlertDialog.Builder(requireContext())
+//                        .setTitle("Elimina")
+//                        .setMessage("Sicuro di voler eliminare il film?")
+//
+//                        // Specifying a listener allows you to take an action before dismissing the dialog.
+//                        // The dialog is automatically dismissed when a dialog button is clicked.
+//                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                // Continue with delete operation
+//                                databaseFilmRemove(position);
+//                            }
+//                        })
+//
+//                        // A null listener allows the button to dismiss the dialog and take no further action.
+//                        .setNegativeButton(android.R.string.no, null)
+//                        .setIcon(android.R.drawable.ic_dialog_alert)
+//                        .show();
             }
         });
 
@@ -168,27 +200,56 @@ public class ResocontoFragment extends Fragment {
                 }
                 else {
                     int value = Integer.parseInt(task.getResult().getValue().toString());
-
                     for (int i = 0; i <= value; i++){
+                        Film film = new Film(-1, ".", ".");
                         DatabaseReference number = ref.child(String.valueOf(i));
 
-                        int finalI = i;
+                        number.child("codice").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                Object object = task.getResult().getValue();
+                                if (object != null) {
+                                    String filmCode = String.valueOf(object);
+                                    film.setCodice(Integer.parseInt(filmCode));
+                                }
+                            }
+                        });
+
                         number.child("titolo").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DataSnapshot> task) {
                                 Object object = task.getResult().getValue();
                                 if (object != null) {
                                     String filmTitle = String.valueOf(object);
+                                    film.setTitolo(filmTitle);
                                     listFilm.add(filmTitle);
                                     adapterFilm.notifyDataSetChanged();
                                     //System.out.println("####" + listFilm);
 
                                     films.setAdapter(adapterFilm);
                                 }
-
-                                if (finalI == value) loading.setVisibility(View.GONE);
                             }
                         });
+
+                        int finalI = i;
+                        number.child("trama").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                Object object = task.getResult().getValue();
+                                if (object != null) {
+                                    String filmTrama = String.valueOf(object);
+                                    film.setTrama(filmTrama);
+                                }
+
+                                if (finalI == value) {
+                                    loading.setVisibility(View.GONE);
+                                    filmUpdateController = true;
+                                }
+                            }
+                        });
+
+                        filmClassList.add(film);
+                        films.se
                     }
                 }
             }
