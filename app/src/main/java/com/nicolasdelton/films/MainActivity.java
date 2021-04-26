@@ -94,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
                         .findItem(R.id.navigation_resoconto).setVisible(true);
                 navView.getMenu()
                         .findItem(R.id.navigation_noleggio).setVisible(true);
+                navView.getMenu()
+                        .findItem(R.id.navigation_film).setVisible(true);
 
                 layout.setVisibility(View.GONE);
             }
@@ -103,14 +105,16 @@ public class MainActivity extends AppCompatActivity {
         guest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navView.setSelectedItemId(R.id.navigation_film);
+                navView.setSelectedItemId(R.id.navigation_resoconto);
 
                 noleggioView.setActivated(false);
 
                 navView.getMenu()
-                        .findItem(R.id.navigation_resoconto).setVisible(false);
+                        .findItem(R.id.navigation_resoconto).setVisible(true);
                 navView.getMenu()
                         .findItem(R.id.navigation_noleggio).setVisible(false);
+                navView.getMenu()
+                        .findItem(R.id.navigation_film).setVisible(false);
 
                 layout.setVisibility(View.GONE);
             }
