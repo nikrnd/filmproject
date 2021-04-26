@@ -95,6 +95,7 @@ public class NoleggioFragment extends Fragment {
                 }
                 else {
                     int value = Integer.parseInt(task.getResult().getValue().toString());
+
                     for (int i = 0; i <= value; i++){
                         Film film = new Film(-1, ".", ".");
                         DatabaseReference number = ref.child(String.valueOf(i));
@@ -126,7 +127,6 @@ public class NoleggioFragment extends Fragment {
                             }
                         });
 
-                        int finalI = i;
                         number.child("trama").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -135,13 +135,13 @@ public class NoleggioFragment extends Fragment {
                                     String filmTrama = String.valueOf(object);
                                     film.setTrama(filmTrama);
                                 }
-
-                                if (finalI == value) loading.setVisibility(View.GONE);
                             }
                         });
 
                         filmClassList.add(film);
                     }
+
+                    loading.setVisibility(View.GONE);
                 }
             }
         });

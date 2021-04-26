@@ -61,13 +61,18 @@ public class FilmFragment extends Fragment {
                     //System.out.println("###");
                     Toast.makeText(requireContext(), "Inserisci tutti i campi", Toast.LENGTH_SHORT).show();
                 } else {
-                    databaseAdd();
+                    inserisciFilm();
                     Toast.makeText(requireContext(), "Film inserito", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
         return root;
+    }
+
+    private void inserisciFilm(){
+        //films.add(new Film(Integer.parseInt(codice.getText().toString()), titolo.getText().toString(), trama.getText().toString()));
+        databaseAdd();
     }
 
     private void databaseAdd(){
