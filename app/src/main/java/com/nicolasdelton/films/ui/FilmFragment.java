@@ -48,6 +48,9 @@ public class FilmFragment extends Fragment {
 
         //removeFilm(2);
 
+        /**
+         * aspetta il click sul pulsante invia
+         */
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,13 +58,16 @@ public class FilmFragment extends Fragment {
 //                System.out.println("##########" + titolo.getText() + "##");
 //                System.out.println("##########" + trama.getText() + "##");
 
+                /**
+                 * se i campi sono vuoi avvisa, senno invia
+                 */
                 if (codice.getText().toString().equals("") ||
                         titolo.getText().toString().equals("") ||
                         trama.getText().toString().equals("")) {
                     //System.out.println("###");
                     Toast.makeText(requireContext(), "Inserisci tutti i campi", Toast.LENGTH_SHORT).show();
                 } else {
-                    inserisciFilm();
+                    databaseAdd();
                     Toast.makeText(requireContext(), "Film inserito", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -70,15 +76,13 @@ public class FilmFragment extends Fragment {
         return root;
     }
 
-    private void inserisciFilm(){
-        //films.add(new Film(Integer.parseInt(codice.getText().toString()), titolo.getText().toString(), trama.getText().toString()));
-        databaseAdd();
-    }
-
     private void databaseAdd(){
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         DatabaseReference ref = database.child("Film");
 
+        /**
+         * legge il valore di riferimento
+         */
         ref.child("value").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -88,6 +92,9 @@ public class FilmFragment extends Fragment {
                 else {
                     int value = Integer.parseInt(task.getResult().getValue().toString());
 
+                    /**
+                     * aumenta il valore di riferimanto di uno e inserisce il film
+                     */
                     DatabaseReference ccDB = ref.child("value");
                     ccDB.setValue(value + 1);
 
