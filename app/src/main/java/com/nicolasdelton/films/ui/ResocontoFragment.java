@@ -19,7 +19,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.nicolasdelton.films.Common;
 import com.nicolasdelton.films.R;
 import com.nicolasdelton.films.film.Film;
 
@@ -28,8 +27,8 @@ import java.util.ArrayList;
 public class ResocontoFragment extends Fragment {
 
     private ListView films, noleggi;
-    private ArrayList<String> listNoleggi;
-    private ArrayAdapter<String> adapterNoleggi;
+    private ArrayList<String> listFilm, listNoleggi;
+    private ArrayAdapter<String> adapterFilm, adapterNoleggi;
     private ConstraintLayout loading;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -37,15 +36,17 @@ public class ResocontoFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_resoconto, container, false);
 
+        films = root.findViewById(R.id.filmList);
         noleggi = root.findViewById(R.id.noleggList);
         loading = root.findViewById(R.id.loading);
-        loading.setVisibility(View.VISIBLE);
+
+        listFilm = new ArrayList<>();
         listNoleggi = new ArrayList<>();
+
+        adapterFilm = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, listFilm);
         adapterNoleggi = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, listNoleggi);
 
-        films = root.findViewById(R.id.filmList);
-        films.setAdapter(Common.syncFilms(requireContext()));
-
+        syncFilms();
         syncNoleggi();
 
         films.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -53,7 +54,7 @@ public class ResocontoFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 new AlertDialog.Builder(requireContext())
                         .setTitle("Elimina")
-                        .setMessage("Sicuro di voler eliminare il film: " + Common.films.get(position))
+                        .setMessage("Sicuro di voler eliminare il film?")
 
                         // Specifying a listener allows you to take an action before dismissing the dialog.
                         // The dialog is automatically dismissed when a dialog button is clicked.
@@ -117,14 +118,13 @@ public class ResocontoFragment extends Fragment {
 
                     DatabaseReference removeFilm = ref.child(String.valueOf(position + 1));
                     removeFilm.setValue(null);
-
-                    Common.films.remove(position);
-                    Common.adapterFilm.notifyDataSetChanged();
                 }
             }
         });
 
         //System.out.println("####"+listFilm);
+        listFilm.remove(position);
+        adapterFilm.notifyDataSetChanged();
     }
 
     private void databaseNoleggiRemove(int position){
@@ -154,6 +154,45 @@ public class ResocontoFragment extends Fragment {
         //System.out.println("####"+listFilm);
         listNoleggi.remove(position);
         adapterNoleggi.notifyDataSetChanged();
+    }
+
+    private void syncFilms(){
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference ref = database.child("Film");
+
+        ref.child("value").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    task.getException();
+                }
+                else {
+                    int value = Integer.parseInt(task.getResult().getValue().toString());
+
+                    for (int i = 0; i <= value; i++){
+                        DatabaseReference number = ref.child(String.valueOf(i));
+
+                        int finalI = i;
+                        number.child("titolo").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                Object object = task.getResult().getValue();
+                                if (object != null) {
+                                    String filmTitle = String.valueOf(object);
+                                    listFilm.add(filmTitle);
+                                    adapterFilm.notifyDataSetChanged();
+                                    //System.out.println("####" + listFilm);
+
+                                    films.setAdapter(adapterFilm);
+                                }
+
+                                if (finalI == value) loading.setVisibility(View.GONE);
+                            }
+                        });
+                    }
+                }
+            }
+        });
     }
 
     private void syncNoleggi(){
