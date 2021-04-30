@@ -40,8 +40,8 @@ public class NoleggioFragment extends Fragment {
     private ConstraintLayout loading;
 
     private ArrayList<Film> filmClassList;
-    private ArrayList<String> listFilm, listNoleggi;
-    private ArrayAdapter<String> adapterFilm, adapterNoleggi;
+    private ArrayList<String> listFilm;
+    private ArrayAdapter<String> adapterFilm;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -49,10 +49,12 @@ public class NoleggioFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_noleggio, container, false);
 
 
-
-        listFilm = new ArrayList<String>();
+        /**
+         * inizializzo i vari attributi
+         */
+        listFilm = new ArrayList<>();
         loading = root.findViewById(R.id.loadingNol);
-        adapterFilm = new ArrayAdapter<String>( requireActivity(), android.R.layout.simple_list_item_1, listFilm);
+        adapterFilm = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, listFilm);
         filmClassList = new ArrayList<>();
 
         loading.setVisibility(View.VISIBLE);
@@ -62,6 +64,11 @@ public class NoleggioFragment extends Fragment {
         giorni = root.findViewById(R.id.giorni);
         giorniritardo = root.findViewById(R.id.giorniritardo);
 
+        chooseSpinner.setAdapter(adapterFilm);
+
+        /**
+         * sincronizzo i film con il database
+         */
         syncFilms();
 
         Button send = root.findViewById(R.id.send2);
@@ -87,6 +94,9 @@ public class NoleggioFragment extends Fragment {
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         DatabaseReference ref = database.child("Film");
 
+        /**
+         * scraica il valore massimo fino a cui cercare
+         */
         ref.child("value").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -96,52 +106,51 @@ public class NoleggioFragment extends Fragment {
                 else {
                     int value = Integer.parseInt(task.getResult().getValue().toString());
 
+                    if (value == 0) loading.setVisibility(View.GONE);
+                    /**
+                     * salva ogni film negli array
+                     */
                     for (int i = 0; i <= value; i++){
-                        Film film = new Film(-1, ".", ".");
                         DatabaseReference number = ref.child(String.valueOf(i));
 
+                        int finalI = i;
                         number.child("codice").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DataSnapshot> task) {
                                 Object object = task.getResult().getValue();
                                 if (object != null) {
                                     String filmCode = String.valueOf(object);
-                                    film.setCodice(Integer.parseInt(filmCode));
+
+                                    number.child("titolo").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                            Object object = task.getResult().getValue();
+                                            String filmTitle = String.valueOf(object);
+
+                                            number.child("trama").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                                    Object object = task.getResult().getValue();
+                                                    String filmTrama = String.valueOf(object);
+
+                                                    /**
+                                                     * aggiunge agli array il film e aggiorna l'adapter
+                                                     */
+                                                    filmClassList.add(new Film(Integer.parseInt(filmCode), filmTitle, filmTrama));
+                                                    listFilm.add(filmTitle);
+
+                                                    //System.out.println(listFilm + " - " + value + " " + finalI);
+                                                    if (finalI == value) adapterFilm.notifyDataSetChanged();
+
+                                                    loading.setVisibility(View.GONE);
+                                                }
+                                            });
+                                        }
+                                    });
                                 }
                             }
                         });
-
-                        number.child("titolo").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                Object object = task.getResult().getValue();
-                                if (object != null) {
-                                    String filmTitle = String.valueOf(object);
-                                    film.setTitolo(filmTitle);
-                                    listFilm.add(filmTitle);
-                                    adapterFilm.notifyDataSetChanged();
-                                    //System.out.println("####" + listFilm);
-
-                                    chooseSpinner.setAdapter(adapterFilm);
-                                }
-                            }
-                        });
-
-                        number.child("trama").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                Object object = task.getResult().getValue();
-                                if (object != null) {
-                                    String filmTrama = String.valueOf(object);
-                                    film.setTrama(filmTrama);
-                                }
-                            }
-                        });
-
-                        filmClassList.add(film);
                     }
-
-                    loading.setVisibility(View.GONE);
                 }
             }
         });
@@ -151,6 +160,9 @@ public class NoleggioFragment extends Fragment {
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         DatabaseReference ref = database.child("Noleggio");
 
+        /**
+         * Legge il primo valore disponibile in cui inserire il noleggio
+         */
         ref.child("value").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -160,6 +172,9 @@ public class NoleggioFragment extends Fragment {
                 else {
                     int value = Integer.parseInt(task.getResult().getValue().toString());
 
+                    /**
+                     * modifica il valore ed inserisce il noleggio
+                     */
                     DatabaseReference ccDB = ref.child("value");
                     ccDB.setValue(value + 1);
 
@@ -191,6 +206,11 @@ public class NoleggioFragment extends Fragment {
         });
     }
 
+    /**
+     * trova il film in base al titolo
+     * @param item Titolo
+     * @return Film con il titolo inserito
+     */
     private Film findFilm(String item){
         for (int i = 0; i < filmClassList.size(); i++){
             if (filmClassList.get(i).getTitolo().equals(item)) return filmClassList.get(i);

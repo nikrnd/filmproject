@@ -98,7 +98,7 @@ public class ResocontoFragment extends Fragment {
                         .setTitle("Dati utente")
                         .setMessage("ID utente: " + noleggiArray.get(position).getIdCliente() +
                                     "\nGiorni: " + noleggiArray.get(position).getGiorni() +
-                                    "\nGiorni ritardo" + noleggiArray.get(position).getGiorniRitardo())
+                                    "\nGiorni ritardo: " + noleggiArray.get(position).getGiorniRitardo())
 
                         // Specifying a listener allows you to take an action before dismissing the dialog.
                         // The dialog is automatically dismissed when a dialog button is clicked.
@@ -113,7 +113,7 @@ public class ResocontoFragment extends Fragment {
                         })
 
                         // A null listener allows the button to dismiss the dialog and take no further action.
-                        .setNegativeButton(android.R.string.no, null)
+                        .setNegativeButton(android.R.string.ok, null)
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .show();
             }
@@ -253,6 +253,7 @@ public class ResocontoFragment extends Fragment {
                 else {
                     int value = Integer.parseInt(task.getResult().getValue().toString());
 
+                    if (value == 0) loading.setVisibility(View.GONE);
                     /**
                      * salva ogni noleggio negli array
                      */
