@@ -48,6 +48,7 @@ public class ResocontoFragment extends Fragment {
         adapterNoleggi = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, listNoleggi);
 
         films.setAdapter(adapterFilm);
+        noleggi.setAdapter(adapterNoleggi);
 
         /**
          * sincronizza le due liste
@@ -95,7 +96,7 @@ public class ResocontoFragment extends Fragment {
                  */
                 new AlertDialog.Builder(requireContext())
                         .setTitle("Dati utente")
-                        .setMessage("ID: " + noleggiArray.get(position).getIdCliente() +
+                        .setMessage("ID utente: " + noleggiArray.get(position).getIdCliente() +
                                     "\nGiorni: " + noleggiArray.get(position).getGiorni() +
                                     "\nGiorni ritardo" + noleggiArray.get(position).getGiorniRitardo())
 
