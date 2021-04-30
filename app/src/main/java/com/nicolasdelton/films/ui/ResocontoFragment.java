@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.nicolasdelton.films.MainActivity;
 import com.nicolasdelton.films.R;
 import com.nicolasdelton.films.film.Film;
 import com.nicolasdelton.films.film.Noleggio;
@@ -56,68 +57,70 @@ public class ResocontoFragment extends Fragment {
         syncFilms();
         syncNoleggi();
 
-        /**
-         * controlla se ci sono click negli item
-         */
-        films.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                /**
-                 * apre l'alert
-                 */
-                new AlertDialog.Builder(requireContext())
-                        .setTitle("Trama")
-                        .setMessage(filmArray.get(position).getTrama())
+        if (MainActivity.isAdmin == true) {
+            /**
+             * controlla se ci sono click negli item
+             */
+            films.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    /**
+                     * apre l'alert
+                     */
+                    new AlertDialog.Builder(requireContext())
+                            .setTitle("Trama")
+                            .setMessage(filmArray.get(position).getTrama())
 
-                        // Specifying a listener allows you to take an action before dismissing the dialog.
-                        // The dialog is automatically dismissed when a dialog button is clicked.
-                        .setPositiveButton("Elimina", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // Continue with delete operation
-                                /**
-                                 * se premuto "Elimina" elimina il film dal database e dagli array
-                                 */
-                                removeFilm(filmArray.get(position).getTitolo());
-                            }
-                        })
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("Elimina", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Continue with delete operation
+                                    /**
+                                     * se premuto "Elimina" elimina il film dal database e dagli array
+                                     */
+                                    removeFilm(filmArray.get(position).getTitolo());
+                                }
+                            })
 
-                        // A null listener allows the button to dismiss the dialog and take no further action.
-                        .setNegativeButton(android.R.string.ok, null)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
-            }
-        });
+                            // A null listener allows the button to dismiss the dialog and take no further action.
+                            .setNegativeButton(android.R.string.ok, null)
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
+            });
 
-        noleggi.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                /**
-                 * apre l'alert
-                 */
-                new AlertDialog.Builder(requireContext())
-                        .setTitle("Dati utente")
-                        .setMessage("ID utente: " + noleggiArray.get(position).getIdCliente() +
+            noleggi.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    /**
+                     * apre l'alert
+                     */
+                    new AlertDialog.Builder(requireContext())
+                            .setTitle("Dati utente")
+                            .setMessage("ID utente: " + noleggiArray.get(position).getIdCliente() +
                                     "\nGiorni: " + noleggiArray.get(position).getGiorni() +
                                     "\nGiorni ritardo: " + noleggiArray.get(position).getGiorniRitardo())
 
-                        // Specifying a listener allows you to take an action before dismissing the dialog.
-                        // The dialog is automatically dismissed when a dialog button is clicked.
-                        .setPositiveButton("Elimina", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // Continue with delete operation
-                                /**
-                                 * se premuto "Elimina" elimina il noleggio dal database e dagli array
-                                 */
-                                removeNoleggi(noleggiArray.get(position).getFilm().getTitolo());
-                            }
-                        })
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("Elimina", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Continue with delete operation
+                                    /**
+                                     * se premuto "Elimina" elimina il noleggio dal database e dagli array
+                                     */
+                                    removeNoleggi(noleggiArray.get(position).getFilm().getTitolo());
+                                }
+                            })
 
-                        // A null listener allows the button to dismiss the dialog and take no further action.
-                        .setNegativeButton(android.R.string.ok, null)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
-            }
-        });
+                            // A null listener allows the button to dismiss the dialog and take no further action.
+                            .setNegativeButton(android.R.string.ok, null)
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
+            });
+        }
 
         return root;
     }

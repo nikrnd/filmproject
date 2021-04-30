@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public static boolean isAdmin;
     /**
      * Thread in ascolto su pressione pulsanti
      */
@@ -88,12 +89,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 navView.setSelectedItemId(R.id.navigation_film);
 
-                noleggioView.setActivated(true);
-
                 navView.getMenu()
                         .findItem(R.id.navigation_resoconto).setVisible(true);
                 navView.getMenu()
                         .findItem(R.id.navigation_noleggio).setVisible(true);
+                navView.getMenu()
+                        .findItem(R.id.navigation_film).setVisible(true);
+
+                isAdmin = true;
 
                 layout.setVisibility(View.GONE);
             }
@@ -103,14 +106,16 @@ public class MainActivity extends AppCompatActivity {
         guest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navView.setSelectedItemId(R.id.navigation_film);
-
-                noleggioView.setActivated(false);
+                navView.setSelectedItemId(R.id.navigation_resoconto);
 
                 navView.getMenu()
-                        .findItem(R.id.navigation_resoconto).setVisible(false);
+                        .findItem(R.id.navigation_resoconto).setVisible(true);
                 navView.getMenu()
                         .findItem(R.id.navigation_noleggio).setVisible(false);
+                navView.getMenu()
+                        .findItem(R.id.navigation_film).setVisible(false);
+
+                isAdmin = false;
 
                 layout.setVisibility(View.GONE);
             }
