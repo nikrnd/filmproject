@@ -107,7 +107,7 @@ public class ResocontoFragment extends Fragment {
                                 /**
                                  * se premuto "Elimina" elimina il noleggio dal database e dagli array
                                  */
-                                databaseNoleggiRemove(noleggiArray.get(position).getFilm().getTitolo());
+                                removeNoleggi(noleggiArray.get(position).getFilm().getTitolo());
                             }
                         })
 
@@ -323,7 +323,7 @@ public class ResocontoFragment extends Fragment {
         });
     }
 
-    private void databaseNoleggiRemove(String titolo){
+    private void removeNoleggi(String titolo){
         DatabaseReference databaseRead = FirebaseDatabase.getInstance().getReference();
         DatabaseReference ref = databaseRead.child("Noleggio");
 
