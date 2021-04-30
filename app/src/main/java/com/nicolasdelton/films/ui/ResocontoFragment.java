@@ -3,7 +3,9 @@ package com.nicolasdelton.films.ui;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -12,7 +14,9 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.view.MotionEventCompat;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,10 +39,14 @@ public class ResocontoFragment extends Fragment {
     private ArrayAdapter<String> adapterFilm, adapterNoleggi;
     private ConstraintLayout loading;
 
+    private SwipeRefreshLayout mSwipe;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_resoconto, container, false);
+
+        mSwipe = root.findViewById(R.id.swipe);
 
         films = root.findViewById(R.id.filmList);
         noleggi = root.findViewById(R.id.noleggList);
@@ -50,6 +58,25 @@ public class ResocontoFragment extends Fragment {
 
         films.setAdapter(adapterFilm);
         noleggi.setAdapter(adapterNoleggi);
+
+        /**
+         * swipe down
+         */
+        mSwipe.setColorSchemeResources(R.color.backgreen);
+        mSwipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                filmArray.clear();
+                noleggiArray.clear();
+                listFilm.clear();
+                listNoleggi.clear();
+                adapterFilm.notifyDataSetChanged();
+                adapterNoleggi.notifyDataSetChanged();
+
+                syncFilms();
+                syncNoleggi();
+            }
+        });
 
         /**
          * sincronizza le due liste
@@ -288,7 +315,10 @@ public class ResocontoFragment extends Fragment {
                 else {
                     int value = Integer.parseInt(task.getResult().getValue().toString());
 
-                    if (value == 0) loading.setVisibility(View.GONE);
+                    if (value == 0) {
+                        mSwipe.setRefreshing(false);
+                        loading.setVisibility(View.GONE);
+                    }
                     /**
                      * salva ogni noleggio negli array
                      */
@@ -338,7 +368,10 @@ public class ResocontoFragment extends Fragment {
                                                                              */
                                                                             noleggiArray.add(new Noleggio(new Film(Integer.parseInt(noleggioCode), noleggioTitle, noleggioTrama), Integer.parseInt(noleggioId), Integer.parseInt(noleggioGiorni), Integer.parseInt(noleggioGiorniRitardo)));
                                                                             listNoleggi.add(noleggioTitle);
-                                                                            if (finalI == value) adapterNoleggi.notifyDataSetChanged();
+                                                                            if (finalI == value) {
+                                                                                adapterNoleggi.notifyDataSetChanged();
+                                                                                mSwipe.setRefreshing(false);
+                                                                            }
 
                                                                             loading.setVisibility(View.GONE);
                                                                         }
