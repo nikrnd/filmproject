@@ -21,13 +21,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.nicolasdelton.films.R;
 import com.nicolasdelton.films.film.Film;
+import com.nicolasdelton.films.film.Noleggio;
 
 import java.util.ArrayList;
 
 public class ResocontoFragment extends Fragment {
 
     private ListView films, noleggi;
-    private ArrayList<Film> filmArray = new ArrayList<>(), noleggiArray = new ArrayList<>();
+    private ArrayList<Film> filmArray = new ArrayList<>();
+    private ArrayList<Noleggio> noleggiArray = new ArrayList<>();
     private ArrayList<String> listFilm = new ArrayList<>(), listNoleggi = new ArrayList<>();
     private ArrayAdapter<String> adapterFilm, adapterNoleggi;
     private ConstraintLayout loading;
@@ -41,6 +43,7 @@ public class ResocontoFragment extends Fragment {
         noleggi = root.findViewById(R.id.noleggList);
         loading = root.findViewById(R.id.loading);
 
+        loading.setVisibility(View.VISIBLE);
         adapterFilm = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, listFilm);
         adapterNoleggi = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, listNoleggi);
 
@@ -87,16 +90,24 @@ public class ResocontoFragment extends Fragment {
         noleggi.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                /**
+                 * apre l'alert
+                 */
                 new AlertDialog.Builder(requireContext())
-                        .setTitle("Elimina")
-                        .setMessage("Sicuro di voler eliminare il noleggio?")
+                        .setTitle("Dati utente")
+                        .setMessage("ID: " + noleggiArray.get(position).getIdCliente() +
+                                    "\nGiorni: " + noleggiArray.get(position).getGiorni() +
+                                    "\nGiorni ritardo" + noleggiArray.get(position).getGiorniRitardo())
 
                         // Specifying a listener allows you to take an action before dismissing the dialog.
                         // The dialog is automatically dismissed when a dialog button is clicked.
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        .setPositiveButton("Elimina", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // Continue with delete operation
-                                databaseNoleggiRemove(position);
+                                /**
+                                 * se premuto "Elimina" elimina il noleggio dal database e dagli array
+                                 */
+                                databaseNoleggiRemove(noleggiArray.get(position).getFilm().getTitolo());
                             }
                         })
 
@@ -225,10 +236,13 @@ public class ResocontoFragment extends Fragment {
         });
     }
 
-    private void syncNoleggi(){
+    public void syncNoleggi(){
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         DatabaseReference ref = database.child("Noleggio");
 
+        /**
+         * scraica il valore massimo fino a cui cercare
+         */
         ref.child("value").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -238,35 +252,84 @@ public class ResocontoFragment extends Fragment {
                 else {
                     int value = Integer.parseInt(task.getResult().getValue().toString());
 
+                    /**
+                     * salva ogni noleggio negli array
+                     */
                     for (int i = 0; i <= value; i++){
                         DatabaseReference number = ref.child(String.valueOf(i));
 
-                        number.child("titolo").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                        int finalI = i;
+                        number.child("codice").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DataSnapshot> task) {
                                 Object object = task.getResult().getValue();
                                 if (object != null) {
-                                    String filmTitle = String.valueOf(object);
-                                    listNoleggi.add(filmTitle);
-                                    adapterNoleggi.notifyDataSetChanged();
-                                    //System.out.println("####" + listFilm);
+                                    String noleggioCode = String.valueOf(object);
 
-                                    noleggi.setAdapter(adapterNoleggi);
+                                    number.child("titolo").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                            Object object = task.getResult().getValue();
+                                            String noleggioTitle = String.valueOf(object);
+
+                                            number.child("trama").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                                    Object object = task.getResult().getValue();
+                                                    String noleggioTrama = String.valueOf(object);
+
+                                                    number.child("idcliente").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                                            Object object = task.getResult().getValue();
+                                                            String noleggioId = String.valueOf(object);
+
+                                                            number.child("giorni").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                                                    Object object = task.getResult().getValue();
+                                                                    String noleggioGiorni = String.valueOf(object);
+
+                                                                    number.child("giorniritardo").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                                                            Object object = task.getResult().getValue();
+                                                                            String noleggioGiorniRitardo = String.valueOf(object);
+
+                                                                            /**
+                                                                             * aggiunge agli array il film e aggiorna l'adapter
+                                                                             */
+                                                                            noleggiArray.add(new Noleggio(new Film(Integer.parseInt(noleggioCode), noleggioTitle, noleggioTrama), Integer.parseInt(noleggioId), Integer.parseInt(noleggioGiorni), Integer.parseInt(noleggioGiorniRitardo)));
+                                                                            listNoleggi.add(noleggioTitle);
+                                                                            if (finalI == value) adapterNoleggi.notifyDataSetChanged();
+
+                                                                            loading.setVisibility(View.GONE);
+                                                                        }
+                                                                    });
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
                                 }
                             }
                         });
                     }
-
-                    loading.setVisibility(View.GONE);
                 }
             }
         });
     }
 
-    private void databaseNoleggiRemove(int position){
+    private void databaseNoleggiRemove(String titolo){
         DatabaseReference databaseRead = FirebaseDatabase.getInstance().getReference();
         DatabaseReference ref = databaseRead.child("Noleggio");
 
+        /**
+         * legge il valore massimo sul DATABASE fino a cui cercare
+         */
         ref.child("value").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -274,21 +337,44 @@ public class ResocontoFragment extends Fragment {
                     task.getException();
                 }
                 else {
+                    /**
+                     * legge valore dal DARTABASE
+                     */
                     int value = Integer.parseInt(task.getResult().getValue().toString());
 
-                    DatabaseReference ccDB = ref.child("value");
-                    ccDB.setValue(value - 1);
+                    /**
+                     * cerca nel database il titolo da cancellare
+                     */
+                    for (int i = 0; i <= value; i++) {
+                        int finalI = i;
+                        ref.child(String.valueOf(i)).child("titolo").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                Object object = task.getResult().getValue();
 
+                                if (object != null && String.valueOf(object).equals(titolo)) {
+                                    /**
+                                     * rimuove film dal database
+                                     */
+                                    DatabaseReference removeFilm = ref.child(String.valueOf(finalI));
+                                    removeFilm.setValue(null);
+
+                                    /**
+                                     * rimuove film dalle liste e aggiorna lo spinner
+                                     */
+                                    //System.out.println(listFilm);
+                                    noleggiArray.remove(titolo);
+                                    listNoleggi.remove(titolo);
+                                    adapterNoleggi.notifyDataSetChanged();
+                                    //System.out.println(listFilm);
+                                }
+                            }
+                        });
+                    }
                     //System.out.println("####" + position);
-
-                    DatabaseReference removeNoleggio = ref.child(String.valueOf(position + 1));
-                    removeNoleggio.setValue(null);
                 }
             }
         });
-
-        //System.out.println("####"+listFilm);
-        listNoleggi.remove(position);
-        adapterNoleggi.notifyDataSetChanged();
     }
+
 }
