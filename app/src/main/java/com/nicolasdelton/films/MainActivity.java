@@ -81,8 +81,6 @@ public class MainActivity extends AppCompatActivity {
      * Thread in ascolto su pressione pulsanti
      */
     private void twoClickListeners () {
-        View noleggioView = findViewById(R.id.navigation_noleggio);
-
         Button admin = findViewById(R.id.adminBut);
         admin.setOnClickListener(new View.OnClickListener() {
             @Override
